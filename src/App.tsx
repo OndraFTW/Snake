@@ -84,15 +84,14 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   getNewFruit(snake: [number, number][]) {
-    for (;;) {
-      var newFruit: [number, number] = [
+    var newFruit: [number, number];
+    do {
+      newFruit = [
         Math.floor(Math.random() * SIDE),
         Math.floor(Math.random() * SIDE),
       ];
-      if (!snake.find((p) => p[0] === newFruit[0] && p[1] === newFruit[1])) {
-        return newFruit;
-      }
-    }
+    } while (snake.find((p) => p[0] === newFruit[0] && p[1] === newFruit[1]));
+    return newFruit;
   }
 
   getNewHead(key: GameState, head: [number, number]): [number, number] {
