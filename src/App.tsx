@@ -2,9 +2,6 @@ import React from "react";
 import Board from "./Board";
 import styles from "./App.module.scss";
 
-const SIDE = 16;
-const TICK_MS = 400;
-
 export enum GameState {
   Left,
   Right,
@@ -21,7 +18,10 @@ interface AppState {
   fruit: [number, number];
 }
 
-interface AppProps {}
+interface AppProps {
+  side: number;
+  tick: number;
+}
 
 export default class App extends React.Component<AppProps, AppState> {
   interval?: NodeJS.Timer;
@@ -35,7 +35,7 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.tick(), TICK_MS);
+    this.interval = setInterval(() => this.tick(), this.props.tick);
   }
 
   componentWillUnmount() {
@@ -87,8 +87,8 @@ export default class App extends React.Component<AppProps, AppState> {
     var newFruit: [number, number];
     do {
       newFruit = [
-        Math.floor(Math.random() * SIDE),
-        Math.floor(Math.random() * SIDE),
+        Math.floor(Math.random() * this.props.side),
+        Math.floor(Math.random() * this.props.side),
       ];
     } while (snake.find((p) => p[0] === newFruit[0] && p[1] === newFruit[1]));
     return newFruit;
@@ -110,15 +110,15 @@ export default class App extends React.Component<AppProps, AppState> {
   }
 
   getNewGameStatus(snake: [number, number][], status: GameState) {
-    if (snake.length === SIDE * SIDE) {
+    if (snake.length === this.props.side * this.props.side) {
       return GameState.Won;
     }
     const head = snake[0];
     if (
       head[0] === -1 ||
-      head[0] === SIDE ||
+      head[0] === this.props.side ||
       head[1] === -1 ||
-      head[1] === SIDE ||
+      head[1] === this.props.side ||
       snake
         .slice(1, snake.length)
         .find((p) => p[0] === head[0] && p[1] === head[1])
@@ -154,7 +154,7 @@ export default class App extends React.Component<AppProps, AppState> {
       //[SIDE - 4, SIDE / 2],
       //[SIDE - 3, SIDE / 2],
       //[SIDE - 2, SIDE / 2],
-      [SIDE - 1, SIDE / 2],
+      [this.props.side - 1, this.props.side / 2],
     ];
     return {
       fruit: this.getNewFruit(snake),
@@ -193,7 +193,7 @@ export default class App extends React.Component<AppProps, AppState> {
     return (
       <div className={styles.app}>
         <Board
-          side={SIDE}
+          side={this.props.side}
           snake={this.state.snake}
           fruit={this.state.fruit}
           status={this.state.status}
