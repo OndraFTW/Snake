@@ -2,7 +2,7 @@ import React from "react";
 import Board from "./Board";
 import styles from "./App.module.scss";
 
-export enum GameState {
+export enum GameStatus {
   Left,
   Right,
   Up,
@@ -13,7 +13,7 @@ export enum GameState {
 }
 
 interface AppState {
-  status: GameState;
+  status: GameStatus;
   snake: [number, number][];
   fruit: [number, number];
 }
@@ -48,7 +48,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
   buttonPressed(e: KeyboardEvent) {
     const statusAfterButton = this.buttonToState(e, this.state.status);
-    if (statusAfterButton === GameState.Start) {
+    if (statusAfterButton === GameStatus.Start) {
       this.setState(this.getBaseState());
     } else {
       const newState = { ...this.state };
@@ -59,7 +59,7 @@ export default class App extends React.Component<AppProps, AppState> {
 
   gameStep() {
     if (
-      [GameState.Start, GameState.Won, GameState.Lost].includes(
+      [GameStatus.Start, GameStatus.Won, GameStatus.Lost].includes(
         this.state.status
       )
     ) {
@@ -94,24 +94,24 @@ export default class App extends React.Component<AppProps, AppState> {
     return newFruit;
   }
 
-  getNewHead(key: GameState, head: [number, number]): [number, number] {
+  getNewHead(key: GameStatus, head: [number, number]): [number, number] {
     switch (key) {
-      case GameState.Left:
+      case GameStatus.Left:
         return [head[0], head[1] - 1];
-      case GameState.Right:
+      case GameStatus.Right:
         return [head[0], head[1] + 1];
-      case GameState.Up:
+      case GameStatus.Up:
         return [head[0] - 1, head[1]];
-      case GameState.Down:
+      case GameStatus.Down:
         return [head[0] + 1, head[1]];
       default:
         return head;
     }
   }
 
-  getNewGameStatus(snake: [number, number][], status: GameState) {
+  getNewGameStatus(snake: [number, number][], status: GameStatus) {
     if (snake.length === this.props.side * this.props.side) {
-      return GameState.Won;
+      return GameStatus.Won;
     }
     const head = snake[0];
     if (
@@ -123,26 +123,26 @@ export default class App extends React.Component<AppProps, AppState> {
         .slice(1, snake.length)
         .find((p) => p[0] === head[0] && p[1] === head[1])
     ) {
-      return GameState.Lost;
+      return GameStatus.Lost;
     }
     return status;
   }
 
-  buttonToState(e: KeyboardEvent, status: GameState): GameState {
-    if ([GameState.Won, GameState.Lost].includes(this.state.status)) {
+  buttonToState(e: KeyboardEvent, status: GameStatus): GameStatus {
+    if ([GameStatus.Won, GameStatus.Lost].includes(this.state.status)) {
       if (e.key === "Enter") {
-        return GameState.Start;
+        return GameStatus.Start;
       } else {
         return status;
       }
-    } else if (e.key === "ArrowLeft" && status !== GameState.Right) {
-      return GameState.Left;
-    } else if (e.key === "ArrowRight" && status !== GameState.Left) {
-      return GameState.Right;
-    } else if (e.key === "ArrowUp" && status !== GameState.Down) {
-      return GameState.Up;
-    } else if (e.key === "ArrowDown" && status !== GameState.Up) {
-      return GameState.Down;
+    } else if (e.key === "ArrowLeft" && status !== GameStatus.Right) {
+      return GameStatus.Left;
+    } else if (e.key === "ArrowRight" && status !== GameStatus.Left) {
+      return GameStatus.Right;
+    } else if (e.key === "ArrowUp" && status !== GameStatus.Down) {
+      return GameStatus.Up;
+    } else if (e.key === "ArrowDown" && status !== GameStatus.Up) {
+      return GameStatus.Down;
     } else {
       return status;
     }
@@ -158,16 +158,16 @@ export default class App extends React.Component<AppProps, AppState> {
     ];
     return {
       fruit: this.getNewFruit(snake),
-      status: GameState.Start,
+      status: GameStatus.Start,
       snake,
     };
   }
 
   render(): React.ReactNode {
     var statusBar: React.ReactNode;
-    if (this.state.status === GameState.Start) {
+    if (this.state.status === GameStatus.Start) {
       statusBar = <div className={styles.statusBar}>Use arrow keys.</div>;
-    } else if (this.state.status === GameState.Won) {
+    } else if (this.state.status === GameStatus.Won) {
       statusBar = (
         <div className={styles.statusBar}>
           You won!
@@ -175,7 +175,7 @@ export default class App extends React.Component<AppProps, AppState> {
           Press Enter to restart.
         </div>
       );
-    } else if (this.state.status === GameState.Lost) {
+    } else if (this.state.status === GameStatus.Lost) {
       statusBar = (
         <div className={styles.statusBar}>
           You lost!
