@@ -17,6 +17,7 @@ interface GameState {
   round: number;
   score: number;
   status: GameStatus;
+  buttonPushed: boolean;
   snake: [number, number][];
   fruit: [number, number];
   fruitHistory: [number, number][];
@@ -57,9 +58,10 @@ export default class Game extends React.Component<GameProps, GameState> {
       this.setState(this.getBaseState());
     } else if (statusAfterButton === GameStatus.Replay) {
       this.setState(this.getReplayState());
-    } else {
+    } else if (!this.state.buttonPushed) {
       const newState = { ...this.state };
       newState.status = statusAfterButton;
+      newState.buttonPushed = true;
       this.setState(newState);
     }
   }
@@ -73,6 +75,7 @@ export default class Game extends React.Component<GameProps, GameState> {
       return;
     }
     const newState = { ...this.state };
+    newState.buttonPushed = false;
     newState.round++;
     const newHead = this.getNewHead(
       newState.status === GameStatus.Replay
@@ -189,6 +192,7 @@ export default class Game extends React.Component<GameProps, GameState> {
       round: 0,
       score: 0,
       fruit,
+      buttonPushed: false,
       status: GameStatus.Start,
       fruitHistory: [fruit],
       statusHistory: [GameStatus.Start],
@@ -200,13 +204,16 @@ export default class Game extends React.Component<GameProps, GameState> {
     const snake: [number, number][] = [
       [this.props.side - 1, this.props.side / 2],
     ];
-    const fruit = this.state.fruitHistory[0];
-    const newState = { ...this.state };
-    newState.round = 0;
-    newState.score = 0;
-    newState.status = GameStatus.Replay;
-    newState.fruit = fruit;
-    newState.snake = snake;
+    const newState = {
+      round: 0,
+      score: 0,
+      buttonPushed: false,
+      status: GameStatus.Replay,
+      fruit: this.state.fruitHistory[0],
+      snake,
+      fruitHistory: this.state.fruitHistory,
+      statusHistory: this.state.statusHistory,
+    };
     return newState;
   }
 
