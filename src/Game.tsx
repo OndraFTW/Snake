@@ -11,7 +11,7 @@ export enum Direction {
 }
 
 export enum GameStatus {
-  Start,
+  Play,
   Stop,
   Replay,
 }
@@ -59,7 +59,7 @@ export default class Game extends React.Component<GameProps, GameState> {
 
   gameStep() {
     if (
-      this.props.status === GameStatus.Start &&
+      this.props.status === GameStatus.Play &&
       this.props.direction === Direction.None
     ) {
       this.setState(this.getBaseState());

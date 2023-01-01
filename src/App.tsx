@@ -52,7 +52,7 @@ export default class App extends React.Component<AppProps, AppState> {
       case "Enter": {
         if (newState.gameStatus === GameStatus.Stop) {
           newState.direction = Direction.None;
-          newState.gameStatus = GameStatus.Start;
+          newState.gameStatus = GameStatus.Play;
         }
         break;
       }
@@ -74,7 +74,7 @@ export default class App extends React.Component<AppProps, AppState> {
       status: AppStatus.Start,
       score: 0,
       direction: Direction.None,
-      gameStatus: GameStatus.Start,
+      gameStatus: GameStatus.Play,
     };
   }
 
