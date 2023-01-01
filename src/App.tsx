@@ -1,5 +1,5 @@
 import React from "react";
-import Game, { GameStatus } from "./Game";
+import Game from "./Game";
 
 interface AppProps {}
 
