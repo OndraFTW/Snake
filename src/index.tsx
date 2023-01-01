@@ -7,6 +7,6 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App side={16} tick={400} />
+    <App />
   </React.StrictMode>
 );

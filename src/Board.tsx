@@ -1,12 +1,10 @@
 import React from "react";
 import styles from "./App.module.scss";
-import { GameStatus } from "./App";
 
 interface BoardProps {
   side: number;
   fruit: [number, number];
   snake: [number, number][];
-  status: GameStatus;
 }
 
 export default class Board extends React.Component<BoardProps> {
