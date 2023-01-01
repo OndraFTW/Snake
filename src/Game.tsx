@@ -85,7 +85,10 @@ export default class Game extends React.Component<GameProps, GameState> {
     const newDirection =
       this.props.status === GameStatus.Replay
         ? newState.directionHistory[newState.round]
-        : this.props.direction;
+        : this.getNonOppositeDirection(
+            this.props.direction,
+            newState.directionHistory
+          );
     const newHead = this.getNewHead(newDirection, newState.snake[0]);
     const ateFruit =
       newHead[0] === newState.fruit[0] && newHead[1] === newState.fruit[1];
@@ -97,10 +100,7 @@ export default class Game extends React.Component<GameProps, GameState> {
       ),
     ];
     if (this.props.status !== GameStatus.Replay) {
-      newState.directionHistory = [
-        ...newState.directionHistory,
-        this.props.direction,
-      ];
+      newState.directionHistory = [...newState.directionHistory, newDirection];
     }
     if (ateFruit) {
       newState.score++;
@@ -133,6 +133,28 @@ export default class Game extends React.Component<GameProps, GameState> {
     if (gameEnded) {
       this.props.finished(newState);
     }
+  }
+
+  getNonOppositeDirection(
+    nextDirection: Direction,
+    directionHistory: Direction[]
+  ) {
+    const previousDirection = directionHistory[directionHistory.length - 1];
+    if (previousDirection === nextDirection) {
+      return nextDirection;
+    }
+    if (
+      (previousDirection === Direction.Left &&
+        nextDirection === Direction.Right) ||
+      (previousDirection === Direction.Right &&
+        nextDirection === Direction.Left) ||
+      (previousDirection === Direction.Up &&
+        nextDirection === Direction.Down) ||
+      (previousDirection === Direction.Down && nextDirection === Direction.Up)
+    ) {
+      return previousDirection;
+    }
+    return nextDirection;
   }
 
   getNewFruit(snake: [number, number][]) {
