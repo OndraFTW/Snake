@@ -1,6 +1,7 @@
 import React from "react";
 import Board from "./Board";
 import styles from "./App.module.scss";
+import { AppStatus } from "./App";
 
 export enum Direction {
   None,
@@ -8,12 +9,6 @@ export enum Direction {
   Right,
   Up,
   Down,
-}
-
-export enum GameStatus {
-  Play,
-  Stop,
-  Replay,
 }
 
 export interface GameState {
@@ -30,9 +25,10 @@ export interface GameState {
 interface GameProps {
   side: number;
   tick: number;
-  status: GameStatus;
+  status: AppStatus;
   direction: Direction;
   finished: (gameState: GameState) => void;
+  scoreUpdated: (score: number) => void;
 }
 
 export default class Game extends React.Component<GameProps, GameState> {
@@ -59,18 +55,19 @@ export default class Game extends React.Component<GameProps, GameState> {
 
   gameStep() {
     if (
-      this.props.status === GameStatus.Play &&
+      this.props.status === AppStatus.Play &&
       this.props.direction === Direction.None
     ) {
       this.setState(this.getBaseState());
+      this.props.scoreUpdated(0);
       return;
     }
-    if (this.props.status === GameStatus.Stop) {
+    if (this.props.status === AppStatus.Menu) {
       return;
     }
     const newState = { ...this.state };
     if (
-      this.props.status === GameStatus.Replay &&
+      this.props.status === AppStatus.Replay &&
       this.props.direction === Direction.None &&
       !newState.replayStarted
     ) {
@@ -80,10 +77,11 @@ export default class Game extends React.Component<GameProps, GameState> {
       newState.replayStarted = true;
       newState.snake = [[this.props.side - 1, this.props.side / 2]];
       newState.fruit = newState.fruitHistory[0];
+      this.props.scoreUpdated(0);
     }
     newState.round++;
     const newDirection =
-      this.props.status === GameStatus.Replay
+      this.props.status === AppStatus.Replay
         ? newState.directionHistory[newState.round]
         : this.getNonOppositeDirection(
             this.props.direction,
@@ -99,12 +97,13 @@ export default class Game extends React.Component<GameProps, GameState> {
         ateFruit ? newState.snake.length : newState.snake.length - 1
       ),
     ];
-    if (this.props.status !== GameStatus.Replay) {
+    if (this.props.status !== AppStatus.Replay) {
       newState.directionHistory = [...newState.directionHistory, newDirection];
     }
     if (ateFruit) {
       newState.score++;
-      if (this.props.status !== GameStatus.Replay) {
+      this.props.scoreUpdated(newState.score);
+      if (this.props.status !== AppStatus.Replay) {
         newState.fruit = this.getNewFruit(newState.snake);
         newState.fruitHistory = [...newState.fruitHistory, newState.fruit];
       } else {
@@ -202,13 +201,13 @@ export default class Game extends React.Component<GameProps, GameState> {
 
   render(): React.ReactNode {
     return (
-      <div className={styles.game}>
+      <span className={styles.game}>
         <Board
           side={this.props.side}
           snake={this.state.snake}
           fruit={this.state.fruit}
         />
-      </div>
+      </span>
     );
   }
 }

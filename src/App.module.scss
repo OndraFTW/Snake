@@ -7,6 +7,18 @@
   font-family: monospace;
 }
 
+.game {
+  display: inline-block;
+}
+
+.menu {
+  display: inline-block;
+}
+
+.menuline {
+  white-space: pre;
+}
+
 .board {
   white-space: pre;
 }
