@@ -13,7 +13,6 @@ interface AppProps {}
 
 interface AppState {
   side: number;
-  tick: number;
   status: AppStatus;
   score: number;
   won: boolean;
@@ -111,7 +110,6 @@ export default class App extends React.Component<AppProps, AppState> {
   getBaseState(): AppState {
     return {
       side: 16,
-      tick: 400,
       won: false,
       status: AppStatus.Play,
       score: 0,
@@ -140,7 +138,6 @@ export default class App extends React.Component<AppProps, AppState> {
       <div className={styles.app}>
         <Game
           side={this.state.side}
-          tick={this.state.tick}
           finished={this.gameFinished}
           scoreUpdated={this.updateScore}
           direction={this.state.direction}

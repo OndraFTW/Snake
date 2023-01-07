@@ -16,6 +16,7 @@ export interface GameState {
   score: number;
   won: boolean;
   replayStarted: boolean;
+  tick: number;
   snake: [number, number][];
   fruit: [number, number];
   fruitHistory: [number, number][];
@@ -24,7 +25,6 @@ export interface GameState {
 
 interface GameProps {
   side: number;
-  tick: number;
   status: AppStatus;
   direction: Direction;
   finished: (gameState: GameState) => void;
@@ -42,7 +42,7 @@ export default class Game extends React.Component<GameProps, GameState> {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.tick(), this.props.tick);
+    this.interval = setInterval(() => this.tick(), this.state.tick);
   }
 
   componentWillUnmount() {
@@ -73,6 +73,7 @@ export default class Game extends React.Component<GameProps, GameState> {
     ) {
       newState.round = 0;
       newState.score = 0;
+      newState.tick = 400;
       newState.won = false;
       newState.replayStarted = true;
       newState.snake = [[this.props.side - 1, this.props.side / 2]];
@@ -102,6 +103,9 @@ export default class Game extends React.Component<GameProps, GameState> {
     }
     if (ateFruit) {
       newState.score++;
+      newState.tick -= 25;
+      clearInterval(this.interval);
+      this.interval = setInterval(() => this.tick(), newState.tick);
       this.props.scoreUpdated(newState.score);
       if (this.props.status !== AppStatus.Replay) {
         newState.fruit = this.getNewFruit(newState.snake);
@@ -191,6 +195,7 @@ export default class Game extends React.Component<GameProps, GameState> {
       round: 0,
       score: 0,
       fruit,
+      tick: 400,
       won: false,
       replayStarted: false,
       fruitHistory: [fruit],
