@@ -114,7 +114,7 @@ export default class Game extends React.Component<GameProps, GameState> {
         newState.fruit = newState.fruitHistory[newState.score];
       }
     }
-    var gameEnded = false;
+    let gameEnded = false;
     if (newState.snake.length === this.props.side * this.props.side) {
       newState.won = true;
       gameEnded = true;
@@ -160,14 +160,18 @@ export default class Game extends React.Component<GameProps, GameState> {
     return nextDirection;
   }
 
+  isFruitInsideSnake(snake: [number, number][], fruit: [number, number]){
+    return snake.find((p) => p[0] === fruit[0] && p[1] === fruit[1]);
+  }
+
   getNewFruit(snake: [number, number][]) {
-    var newFruit: [number, number];
+    let newFruit: [number, number];
     do {
       newFruit = [
         Math.floor(Math.random() * this.props.side),
         Math.floor(Math.random() * this.props.side),
       ];
-    } while (snake.find((p) => p[0] === newFruit[0] && p[1] === newFruit[1]));
+    } while (this.isFruitInsideSnake(snake, newFruit));
     return newFruit;
   }
 

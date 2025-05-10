@@ -11,8 +11,8 @@ interface MenuProps {
 
 export default class Menu extends React.Component<MenuProps> {
   render(): React.ReactNode {
-    var printedMenuLines = 0;
-    var printedMessageLines = 0;
+    let printedMenuLines = 0;
+    let printedMessageLines = 0;
     const toReturn: React.ReactNode[] = [];
     const firstLine = (
       <div className={styles.menuline}>{"#".repeat(this.props.side)}</div>
@@ -27,7 +27,7 @@ export default class Menu extends React.Component<MenuProps> {
       false
     );
     toReturn.push(firstLine);
-    for (var i = 0; i < this.props.side; i++) {
+    for (let i = 0; i < this.props.side; i++) {
       if (this.props.options.length > 0 && i === 0) {
         toReturn.push(this.stringToLine("Menu:", false));
       } else if (i % 2 === 0 && printedMenuLines < this.props.options.length) {
@@ -59,7 +59,7 @@ export default class Menu extends React.Component<MenuProps> {
   stringToLine(s: string, selected: boolean) {
     const prepend = Math.floor((this.props.side - s.length) / 2);
     const append = this.props.side - s.length - prepend;
-    var toShow = "";
+    let toShow = "";
     if (!selected) {
       toShow = "#" + " ".repeat(prepend - 1) + s + " ".repeat(append - 1) + "#";
     } else {

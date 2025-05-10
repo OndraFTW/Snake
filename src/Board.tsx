@@ -10,9 +10,9 @@ interface BoardProps {
 export default class Board extends React.Component<BoardProps> {
   render(): React.ReactNode {
     const toReturn: React.ReactNode[] = [];
-    for (var i = -1; i <= this.props.side; i++) {
-      var line = "";
-      for (var j = -1; j <= this.props.side; j++) {
+    for (let i = -1; i <= this.props.side; i++) {
+      let line = "";
+      for (let j = -1; j <= this.props.side; j++) {
         if (i === -1 || i === this.props.side) {
           if (j === -1 || j === this.props.side) {
             line += "#";
@@ -36,7 +36,7 @@ export default class Board extends React.Component<BoardProps> {
     if (this.props.fruit[0] === i && this.props.fruit[1] === j) {
       return "X";
     }
-    for (var s = 0; s < this.props.snake.length; s++) {
+    for (let s = 0; s < this.props.snake.length; s++) {
       if (this.props.snake[s][0] === i && this.props.snake[s][1] === j) {
         if (s === 0) {
           return "o";
